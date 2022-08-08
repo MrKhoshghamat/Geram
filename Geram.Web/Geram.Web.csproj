@@ -19,4 +19,8 @@
 	  <ProjectReference Include="..\Geram.Data\Geram.Data.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="wwwroot\common\" />
+	</ItemGroup>
+
 </Project>
