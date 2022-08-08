@@ -1,4 +1,5 @@
 using Geram.Data.Context;
+using Geram.IoC;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,9 +9,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+#region DbContext
+
 builder.Services.AddDbContext<GeramDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("GeramConnection"))
 );
+
+#endregion
+
+#region Register Dependencies
+
+DependencyContainer.RegisterDependencies(builder.Services);
+
+#endregion
 
 #endregion
 

@@ -17,7 +17,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Geram.Application\Geram.Application.csproj" />
 	  <ProjectReference Include="..\Geram.Data\Geram.Data.csproj" />
+	  <ProjectReference Include="..\Geram.IoC\Geram.IoC.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

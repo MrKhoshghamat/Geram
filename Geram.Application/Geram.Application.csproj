@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -9,8 +9,10 @@
   <ItemGroup>
     <Folder Include="Extentions\" />
     <Folder Include="Convertors\" />
-    <Folder Include="Generators\" />
-    <Folder Include="Statics\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Geram.Domain\Geram.Domain.csproj" />
   </ItemGroup>
 
 </Project>
