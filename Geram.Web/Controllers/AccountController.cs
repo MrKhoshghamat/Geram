@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Geram.Application.Services.Interfaces;
 using Geram.Domain.ViewModels.Account;
+using Geram.Web.ActionFilters;
 using GoogleReCaptcha.V3.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -27,12 +28,20 @@ namespace Geram.Web.Controllers
         #region Login
 
         [HttpGet("login")]
-        public IActionResult Login()
+        [RedirectHomeIfLoggedInActionFilter]
+        public IActionResult Login(string returnUrl = "")
         {
-            return View();
+            var result = new LoginViewModel();
+
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                result.ReturnUrl = returnUrl;
+            }
+            return View(result);
         }
 
         [HttpPost("login"), ValidateAntiForgeryToken]
+        [RedirectHomeIfLoggedInActionFilter]
         public async Task<IActionResult> Login(LoginViewModel login)
         {
             if (!await _captchaValidator.IsCaptchaPassedAsync(login.Captcha))
@@ -75,6 +84,12 @@ namespace Geram.Web.Controllers
                     await HttpContext.SignInAsync(principal, properties);
 
                     TempData[SuccessMessage] = "خوش آمدید";
+
+                    if (!string.IsNullOrEmpty(login.ReturnUrl))
+                    {
+                        return Redirect(login.ReturnUrl);
+                    }
+
                     return Redirect("/");
             }
 
@@ -85,12 +100,14 @@ namespace Geram.Web.Controllers
         #region Register
 
         [HttpGet("register")]
+        [RedirectHomeIfLoggedInActionFilter]
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost("register"), ValidateAntiForgeryToken]
+        [RedirectHomeIfLoggedInActionFilter]
         public async Task<IActionResult> Register(RegisterViewModel register)
         {
             if (!await _captchaValidator.IsCaptchaPassedAsync(register.Captcha))
@@ -117,6 +134,17 @@ namespace Geram.Web.Controllers
             }
 
             return View(register);
+        }
+
+        #endregion
+
+        #region Logout
+
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return Redirect("/");
         }
 
         #endregion

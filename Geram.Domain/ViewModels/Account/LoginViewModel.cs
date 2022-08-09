@@ -16,6 +16,8 @@ namespace Geram.Domain.ViewModels.Account
         [Required(ErrorMessage = "لطفا {0} را وارد نمایید.")]
         public string Password { get; set; }
 
+        public string? ReturnUrl { get; set; }
+
         public bool RememberMe { get; set; }
     }
 
