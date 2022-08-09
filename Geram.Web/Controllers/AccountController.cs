@@ -169,5 +169,46 @@ namespace Geram.Web.Controllers
         }
 
         #endregion
+
+        #region Forgot Password
+
+        [HttpGet("forgot-password")]
+        public async Task<IActionResult> ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel forgotPassword)
+        {
+            if (!await _captchaValidator.IsCaptchaPassedAsync(forgotPassword.Captcha))
+            {
+                TempData[ErrorMessage] = "اعتبارسنجی گوگل با خطا مواجه شد. لطفا مجددا تلاش کنید.";
+                return View(forgotPassword);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(forgotPassword);
+            }
+
+            var result = await _userService.ForgotPassword(forgotPassword);
+
+            switch (result)
+            {
+                case ForgotPasswordResult.UserBanned:
+                    TempData[WarningMessage] = "دسترسی شما به حساب کاربری مسدود میباشد.";
+                    break;
+                case ForgotPasswordResult.UserNotFound:
+                    TempData[ErrorMessage] = "کاربری با این مشخصات یافت نشد.";
+                    break;
+                case ForgotPasswordResult.Success:
+                    TempData[InfoMessage] = "لینک بازیابی کلمه عبور به ایمیل شما ارسال شد.";
+                    return RedirectToAction("Login", "Account");
+            }
+            return View();
+        }
+
+        #endregion
     }
 }

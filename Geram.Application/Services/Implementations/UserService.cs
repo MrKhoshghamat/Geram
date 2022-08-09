@@ -111,5 +111,32 @@ namespace Geram.Application.Services.Implementations
         }
 
         #endregion
+
+        #region Forgot Password
+
+        public async Task<ForgotPasswordResult> ForgotPassword(ForgotPasswordViewModel forgotPassword)
+        {
+            var email = forgotPassword.Email.SanitizeText().Trim().ToLower();
+
+            var user = await _userRepository.GetUserByEmail(email);
+
+            if (user == null || user.IsDeleted) return ForgotPasswordResult.UserNotFound;
+
+            if (user.IsBanned) return ForgotPasswordResult.UserBanned;
+
+            #region Send Forgot Password Email
+
+            var body = $@"
+                <div>برای فراموشی کلمه عبور خود، بر روی لینک زیر کلیک کنید.</div>
+                <a href='{PathTools.SiteAddress}/reset-password/{user.EmailActivationCode}'>فراموشی کلمه عبور</a>";
+
+            await _emailService.SendEmail(user.Email, "فراموشی کلمه عبور", body);
+
+            #endregion
+
+            return ForgotPasswordResult.Success;
+        }
+
+        #endregion
     }
 }
