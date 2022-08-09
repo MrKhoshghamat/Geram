@@ -62,6 +62,8 @@
                                 <input type="password" asp-for="RePassword">
                             </div>
                             <span asp-validation-for="RePassword" class="error-style"></span>
+                            
+                            <input type="hidden" asp-for="Captcha"/>
 
                             <button type="submit"> ثبت نام در سایت </button>
                         </div>
@@ -77,4 +79,5 @@
     <script src="js/user.js"></script>
     <script src="/js/home.js"></script>
     <partial name="_JqueryValidation"/>
+    <partial name="_CaptchaScripts"/>
 }

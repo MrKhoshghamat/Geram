@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using Geram.Domain.ViewModels.Common;
 
 namespace Geram.Domain.ViewModels.Account
 {
-    public class RegisterViewModel
+    public class RegisterViewModel : GoogleRecaptchaViewModel
     {
         [Display(Name = "ایمیل")]
         [MaxLength(25, ErrorMessage = "{0} نمیتواند بیشتر از {1} کارکتر باشد.")]

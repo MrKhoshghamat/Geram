@@ -1,5 +1,6 @@
 ﻿using Geram.Application.Services.Interfaces;
 using Geram.Domain.ViewModels.Account;
+using GoogleReCaptcha.V3.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Geram.Web.Controllers
@@ -9,10 +10,12 @@ namespace Geram.Web.Controllers
         #region Ctor
 
         private readonly IUserService _userService;
+        private readonly ICaptchaValidator _captchaValidator;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService, ICaptchaValidator captchaValidator)
         {
             _userService = userService;
+            _captchaValidator = captchaValidator;
         }
 
         #endregion
@@ -37,6 +40,12 @@ namespace Geram.Web.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterViewModel register)
         {
+            if (!await _captchaValidator.IsCaptchaPassedAsync(register.Captcha))
+            {
+                TempData[ErrorMessage] = "اعتبارسنجی گوگل با خطا مواجه شد. لطفا مجددا تلاش کنید.";
+                return View(register);
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(register);
