@@ -25,19 +25,19 @@ namespace Geram.Application.Services.Implementations
         public async Task<RegisterResult> RegisterUser(RegisterViewModel register)
         {
             // Check Email Exists
-            if (await _userRepository.IsExistUserByEmail(register.Email.Trim().ToLower()))
+            if (await _userRepository.IsExistUserByEmail(register.Email.SanitizeText().Trim().ToLower()))
             {
                 return RegisterResult.EmailExists;
             }
 
             // Hash Password
-            var password = PasswordHelper.EncodePasswordMd5(register.Password);
+            var password = PasswordHelper.EncodePasswordMd5(register.Password.SanitizeText());
 
             // Create User
             var user = new User()
             {
                 Avatar = PathTools.DefaultUserAvatar,
-                Email = register.Email.Trim().ToLower(),
+                Email = register.Email.SanitizeText().Trim().ToLower(),
                 Password = password,
                 EmailActivationCode = CodeGenerator.CreateActivationCode(),
             };

@@ -37,7 +37,7 @@ namespace Geram.Web.Controllers
             return View();
         }
 
-        [HttpPost("register")]
+        [HttpPost("register"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel register)
         {
             if (!await _captchaValidator.IsCaptchaPassedAsync(register.Captcha))
