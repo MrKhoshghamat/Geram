@@ -56,5 +56,33 @@ namespace Geram.Application.Services.Implementations
         }
 
         #endregion
+
+        #region Login
+
+        public async Task<LoginResult> CheckUserForLogin(LoginViewModel login)
+        {
+            var user = await _userRepository.GetUserByEmail(login.Email.SanitizeText().Trim().ToLower());
+
+            if (user == null) return LoginResult.UserNotFound;
+
+            var hashedPassword = PasswordHelper.EncodePasswordMd5(login.Password.SanitizeText());
+
+            if(hashedPassword != user.Password) return LoginResult.UserNotFound;
+
+            if(user.IsDeleted) return LoginResult.UserNotFound;
+
+            if (user.IsBanned) return LoginResult.UserIsBanned;
+
+            if (!user.IsEmailConfirmed) return LoginResult.EmailNotActivated;
+
+            return LoginResult.Success;
+        }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _userRepository.GetUserByEmail(email);
+        }
+
+        #endregion
     }
 }

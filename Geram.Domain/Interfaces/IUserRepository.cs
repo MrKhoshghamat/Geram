@@ -6,6 +6,7 @@ namespace Geram.Domain.Interfaces
     {
         Task<bool> IsExistUserByEmail(string email);
         Task CreateUser(User user);
+        Task<User> GetUserByEmail(string email);
         Task Save();
     }
 }

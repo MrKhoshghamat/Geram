@@ -28,6 +28,11 @@ namespace Geram.Data.Repositories
             await _context.AddAsync(user);
         }
 
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(s => s.Email == email);
+        }
+
         public async Task Save()
         {
             await _context.SaveChangesAsync();
