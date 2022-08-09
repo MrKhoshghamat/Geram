@@ -13,10 +13,12 @@ namespace Geram.Application.Services.Implementations
         #region Ctor
 
         private readonly IUserRepository _userRepository;
+        private readonly IEmailService _emailService;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IEmailService emailService)
         {
             _userRepository = userRepository;
+            _emailService = emailService;
         }
 
         #endregion
@@ -48,7 +50,11 @@ namespace Geram.Application.Services.Implementations
 
             #region Send Activation Email
 
-            // TODO Send Email
+            var body = $@"
+                <div>برای فعالسازی حساب کاربری خود، بر روی لینک زیر کلیک کنید.</div>
+                <a href='{PathTools.SiteAddress}/activate-email/{user.EmailActivationCode}'>فعالسازی حساب کاربری</a>";
+
+            await _emailService.SendEmail(user.Email, "فعالسازی حساب کاربری", body);
 
             #endregion
 
@@ -81,6 +87,27 @@ namespace Geram.Application.Services.Implementations
         public async Task<User> GetUserByEmail(string email)
         {
             return await _userRepository.GetUserByEmail(email);
+        }
+
+        #endregion
+
+        #region Activation Email
+
+        public async Task<bool> ActivateUserEmail(string activationCode)
+        {
+            var user = await _userRepository.GetUserByActivationCode(activationCode);
+
+            if(user == null) return false;
+
+            if (user.IsBanned || user.IsDeleted) return false;
+
+            user.IsEmailConfirmed = true;
+            user.EmailActivationCode = CodeGenerator.CreateActivationCode();
+
+            await _userRepository.UpdateUser(user);
+            await _userRepository.Save();
+
+            return true;
         }
 
         #endregion

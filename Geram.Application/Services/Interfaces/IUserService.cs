@@ -17,5 +17,11 @@ namespace Geram.Application.Services.Interfaces
         Task<User> GetUserByEmail(string email);
 
         #endregion
+
+        #region Email Activation
+
+        Task<bool> ActivateUserEmail(string activationCode);
+
+        #endregion
     }
 }
