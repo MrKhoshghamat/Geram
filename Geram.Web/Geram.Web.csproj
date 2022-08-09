@@ -22,8 +22,4 @@
 	  <ProjectReference Include="..\Geram.IoC\Geram.IoC.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="wwwroot\common\" />
-	</ItemGroup>
-
 </Project>

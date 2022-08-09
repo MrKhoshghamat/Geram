@@ -35,9 +35,26 @@ namespace Geram.Web.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register(RegisterViewModel register)
+        public async Task<IActionResult> Register(RegisterViewModel register)
         {
-            return View();
+            if (!ModelState.IsValid)
+            {
+                return View(register);
+            }
+
+            var result = await _userService.RegisterUser(register);
+
+            switch (result)
+            {
+                case RegisterResult.EmailExists:
+                    TempData[ErrorMessage] = "ایمیل وارد شده قبلا ثبت شده است";
+                    break;
+                case RegisterResult.Success:
+                    TempData[SuccessMessage] = "عملیات با موفقیت انجام شد";
+                    return RedirectToAction("Login","Account");
+            }
+
+            return View(register);
         }
 
         #endregion

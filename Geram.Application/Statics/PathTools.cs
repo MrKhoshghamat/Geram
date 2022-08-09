@@ -4,7 +4,7 @@
     {
         #region User
 
-        public static readonly string DefaultUserAvatar = "/content/user/DefaultAvatar.png";
+        public static readonly string DefaultUserAvatar = "DefaultAvatar.png";
 
         #endregion
     }

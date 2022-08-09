@@ -1,3 +1,5 @@
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using Geram.Data.Context;
 using Geram.IoC;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +16,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<GeramDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("GeramConnection"))
 );
+
+#endregion
+
+#region Encode
+
+builder.Services.AddSingleton<HtmlEncoder>(
+    HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All }));
 
 #endregion
 
