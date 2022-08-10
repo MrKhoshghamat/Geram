@@ -170,5 +170,14 @@ namespace Geram.Application.Services.Implementations
         }
 
         #endregion
+
+        #region User Panel
+
+        public async Task<User?> GetUserById(long userId)
+        {
+            return await _userRepository.GetUserById(userId);
+        }
+
+        #endregion
     }
 }

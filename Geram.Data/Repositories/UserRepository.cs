@@ -2,6 +2,7 @@
 using Geram.Domain.Entities.Account;
 using Geram.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace Geram.Data.Repositories
 {
@@ -41,6 +42,11 @@ namespace Geram.Data.Repositories
         public async Task<User> GetUserByActivationCode(string activationCode)
         {
             return await _context.Users.FirstOrDefaultAsync(s => s.EmailActivationCode.Equals(activationCode));
+        }
+
+        public async Task<User?> GetUserById(long userId)
+        {
+            return await _context.Users.FirstOrDefaultAsync(s => !s.IsDeleted && s.Id.Equals(userId));
         }
 
         public async Task Save()

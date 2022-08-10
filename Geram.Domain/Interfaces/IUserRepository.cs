@@ -9,6 +9,7 @@ namespace Geram.Domain.Interfaces
         Task UpdateUser(User user);
         Task<User> GetUserByEmail(string email);
         Task<User> GetUserByActivationCode(string activationCode);
+        Task<User?> GetUserById(long userId);
         Task Save();
     }
 }

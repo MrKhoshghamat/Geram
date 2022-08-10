@@ -36,5 +36,11 @@ namespace Geram.Application.Services.Interfaces
         Task<User> GetUserByActivationCode(string activationCode);
 
         #endregion
+
+        #region User Panel
+
+        Task<User?> GetUserById(long userId);
+
+        #endregion
     }
 }

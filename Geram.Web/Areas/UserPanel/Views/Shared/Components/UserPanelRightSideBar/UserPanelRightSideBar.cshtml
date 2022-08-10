@@ -1,15 +1,19 @@
-﻿<!-- right side -->
+﻿@using Geram.Application.Extensions
+@using Geram.Application.Statics
+@model Geram.Domain.Entities.Account.User
+
+<!-- right side -->
 <div class="right-side">
     <!-- avatar -->
     <div class="quick-access layer-style">
         <div class="img-layer">
             <a href="javascript:void(0)" class="change-image"><i class="icon-pencil-edit"></i></a>
-            <img src="images/pic/avatar.jpg">
+            <img src="@PathTools.UserAvatarPath@Model.Avatar">
         </div>
         <!-- you can use "gold" , "silver , "bronze" for medals -->
         <div class="detail gold">
-            <h3> میترا رحیمی </h3>
-            <span> عضویت : 01/01/1395 </span>
+            <h3> @Model.GetUserName() </h3>
+            <span> عضویت : @Model.CreateDate.ToShamsi() </span>
         </div>
         <ul>
             <li><a href="" data-toggle="tooltip" data-placement="top" title=" داشبورد "><i class="icon-settings"></i></a></li>
