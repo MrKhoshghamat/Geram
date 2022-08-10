@@ -37,7 +37,7 @@ namespace Geram.Data.Context
                 Id = 1,
                 IsDefault = true,
                 IsDeleted = false,
-                Password = "1234HuneR",
+                Password = "vcschkeikvnegtdc",
                 Port = 587,
                 SMTP = "smtp.gmail.com"
             });
