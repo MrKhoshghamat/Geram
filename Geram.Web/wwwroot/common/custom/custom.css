@@ -8,3 +8,7 @@
 .mt-50 {
     margin-top: 20px;
 }
+
+.display {
+    display: none !important;
+}

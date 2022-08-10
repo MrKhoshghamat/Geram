@@ -178,6 +178,16 @@ namespace Geram.Application.Services.Implementations
             return await _userRepository.GetUserById(userId);
         }
 
+        public async Task ChangeUserAvatar(long userId, string fileName)
+        {
+            var user = await GetUserById(userId);
+
+            user.Avatar = fileName;
+
+            await _userRepository.UpdateUser(user);
+            await _userRepository.Save();
+        }
+
         #endregion
     }
 }

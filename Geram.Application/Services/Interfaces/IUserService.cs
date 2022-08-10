@@ -41,6 +41,8 @@ namespace Geram.Application.Services.Interfaces
 
         Task<User?> GetUserById(long userId);
 
+        Task ChangeUserAvatar(long userId, string fileName);
+
         #endregion
     }
 }
