@@ -29,5 +29,12 @@ namespace Geram.Application.Services.Interfaces
         Task<ForgotPasswordResult> ForgotPassword(ForgotPasswordViewModel forgotPassword);
 
         #endregion
+
+        #region Reset Password
+
+        Task<ResetPasswordResult> ResetPassword(ResetPasswordViewModel resetPassword);
+        Task<User> GetUserByActivationCode(string activationCode);
+
+        #endregion
     }
 }

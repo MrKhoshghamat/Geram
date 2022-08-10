@@ -178,7 +178,7 @@ namespace Geram.Web.Controllers
             return View();
         }
 
-        [HttpPost("forgot-password")]
+        [HttpPost("forgot-password"), ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel forgotPassword)
         {
             if (!await _captchaValidator.IsCaptchaPassedAsync(forgotPassword.Captcha))
@@ -209,6 +209,54 @@ namespace Geram.Web.Controllers
             return View();
         }
 
+        #endregion
+
+        #region Reset Password
+
+        [HttpGet("reset-password/{emailActivationCode}")]
+        public async Task<IActionResult> ResetPassword(string emailActivationCode)
+        {
+            var user = await _userService.GetUserByActivationCode(emailActivationCode);
+
+            if (user == null || user.IsBanned || user.IsDeleted) return NotFound();
+
+            return View(new ResetPasswordViewModel()
+            {
+                EmailActivationCode = user.EmailActivationCode
+            });
+        }
+
+        [HttpPost("reset-password/{emailActivationCode}"),ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetPassword)
+        {
+            if (!await _captchaValidator.IsCaptchaPassedAsync(resetPassword.Captcha))
+            {
+                TempData[ErrorMessage] = "اعتبارسنجی گوگل با خطا مواجه شد. لطفا مجددا تلاش کنید.";
+                return View(resetPassword);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(resetPassword);
+            }
+
+            var result = await _userService.ResetPassword(resetPassword);
+
+            switch (result)
+            {
+                case ResetPasswordResult.UserNotFound:
+                    TempData[ErrorMessage] = "کاربری با این مشخصات یافت نشد.";
+                    break;
+                case ResetPasswordResult.UserIsBanned:
+                    TempData[WarningMessage] = "دسترسی شما به حساب کاربری مسدود میباشد.";
+                    break;
+                case ResetPasswordResult.Success:
+                    TempData[SuccessMessage] = "کلمه عبور با موفقیت تغییر یافت.";
+                    return RedirectToAction("Login", "Account");
+            }
+
+            return View(resetPassword);
+        }
         #endregion
     }
 }

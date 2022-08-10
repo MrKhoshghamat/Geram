@@ -138,5 +138,37 @@ namespace Geram.Application.Services.Implementations
         }
 
         #endregion
+
+        #region Reset Password
+
+        public async Task<ResetPasswordResult> ResetPassword(ResetPasswordViewModel resetPassword)
+        {
+            var user = await _userRepository.GetUserByActivationCode(resetPassword.EmailActivationCode.SanitizeText());
+
+            if (user == null || user.IsDeleted) return ResetPasswordResult.UserNotFound;
+
+            if (user.IsBanned) return ResetPasswordResult.UserIsBanned;
+
+            var password = PasswordHelper.EncodePasswordMd5(resetPassword.Password.SanitizeText());
+
+            user.Password = password;
+
+            user.IsEmailConfirmed = true;
+
+            user.EmailActivationCode = CodeGenerator.CreateActivationCode();
+
+            await _userRepository.UpdateUser(user);
+
+            await _userRepository.Save();
+
+            return ResetPasswordResult.Success;
+        }
+
+        public async Task<User> GetUserByActivationCode(string activationCode)
+        {
+            return await _userRepository.GetUserByActivationCode(activationCode.SanitizeText());
+        }
+
+        #endregion
     }
 }
