@@ -53,6 +53,6 @@ function StartLoading(selector = 'body') {
     });
 }
 
-function EndLoading(selector) {
+function EndLoading(selector = 'body') {
     $(selector).waitMe('hide');
 }
