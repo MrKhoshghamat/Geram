@@ -1,10 +1,12 @@
-﻿using Geram.Application.Generators;
+﻿using Geram.Application.Extensions;
+using Geram.Application.Generators;
 using Geram.Application.Security;
 using Geram.Application.Services.Interfaces;
 using Geram.Application.Statics;
 using Geram.Domain.Entities.Account;
 using Geram.Domain.Interfaces;
 using Geram.Domain.ViewModels.Account;
+using Geram.Domain.ViewModels.UserPanel.Account;
 
 namespace Geram.Application.Services.Implementations
 {
@@ -186,6 +188,57 @@ namespace Geram.Application.Services.Implementations
 
             await _userRepository.UpdateUser(user);
             await _userRepository.Save();
+        }
+
+        public async Task<EditUserViewModel> FillEditUserViewModel(long userId)
+        {
+            var user = await GetUserById(userId);
+
+            var result = new EditUserViewModel()
+            {
+                BirthDate = user.BirthDate != null ? user.BirthDate.Value.ToShamsi() : string.Empty,
+                CityId = user.CityId,
+                CountryId = user.CountryId,
+                Description = user.Description,
+                FirstName = user.FirstName ?? string.Empty,
+                LastName = user.LastName ?? string.Empty,
+                GetNewsLetter = user.GetNewsLetter,
+                PhoneNumber = user.PhoneNumber
+            };
+
+            return result;
+        }
+
+        public async Task<EditUserInfoResult> EditUserInfo(EditUserViewModel editUserInfo, long userId)
+        {
+            var user = await GetUserById(userId);
+
+            if (!string.IsNullOrEmpty(editUserInfo.BirthDate))
+            {
+                try
+                {
+                    var date = editUserInfo.BirthDate.ToMiladi();
+
+                    user.BirthDate = date;
+                }
+                catch (Exception e)
+                {
+                    return EditUserInfoResult.NotValidDate;
+                }
+            }
+
+            user.FirstName = editUserInfo.FirstName;
+            user.LastName = editUserInfo.LastName;
+            user.Description = editUserInfo.Description;
+            user.PhoneNumber = editUserInfo.PhoneNumber;
+            user.GetNewsLetter = editUserInfo.GetNewsLetter;
+            user.CountryId = editUserInfo.CountryId;
+            user.CityId = editUserInfo.CityId;
+
+            await _userRepository.UpdateUser(user);
+            await _userRepository.Save();
+
+            return EditUserInfoResult.Success;
         }
 
         #endregion

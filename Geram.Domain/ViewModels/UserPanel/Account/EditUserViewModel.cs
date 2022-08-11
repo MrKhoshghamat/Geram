@@ -33,4 +33,10 @@ namespace Geram.Domain.ViewModels.UserPanel.Account
 
         public bool GetNewsLetter { get; set; }
     }
+
+    public enum EditUserInfoResult
+    {
+        NotValidDate,
+        Success
+    }
 }

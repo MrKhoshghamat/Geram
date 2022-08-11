@@ -1,5 +1,6 @@
 ﻿using Geram.Domain.Entities.Account;
 using Geram.Domain.ViewModels.Account;
+using Geram.Domain.ViewModels.UserPanel.Account;
 
 namespace Geram.Application.Services.Interfaces
 {
@@ -42,6 +43,10 @@ namespace Geram.Application.Services.Interfaces
         Task<User?> GetUserById(long userId);
 
         Task ChangeUserAvatar(long userId, string fileName);
+
+        Task<EditUserViewModel> FillEditUserViewModel(long userId);
+
+        Task<EditUserInfoResult> EditUserInfo(EditUserViewModel editUserInfo, long userId);
 
         #endregion
     }

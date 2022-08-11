@@ -129,7 +129,7 @@ namespace Geram.Web.Controllers
                     TempData[ErrorMessage] = "ایمیل وارد شده قبلا ثبت شده است";
                     break;
                 case RegisterResult.Success:
-                    TempData[SuccessMessage] = "عملیات با موفقیت انجام شد";
+                    TempData[InfoMessage] = "عملیات با موفقیت انجام شد. لطفا ایمیل خود را  تایید کنید";
                     return RedirectToAction("Login","Account");
             }
 
