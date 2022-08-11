@@ -217,7 +217,7 @@ namespace Geram.Application.Services.Implementations
             {
                 try
                 {
-                    var date = editUserInfo.BirthDate.ToMiladi();
+                    var date = editUserInfo.BirthDate.SanitizeText().ToMiladi();
 
                     user.BirthDate = date;
                 }
@@ -227,10 +227,10 @@ namespace Geram.Application.Services.Implementations
                 }
             }
 
-            user.FirstName = editUserInfo.FirstName;
-            user.LastName = editUserInfo.LastName;
-            user.Description = editUserInfo.Description;
-            user.PhoneNumber = editUserInfo.PhoneNumber;
+            user.FirstName = editUserInfo.FirstName.SanitizeText();
+            user.LastName = editUserInfo.LastName.SanitizeText();
+            user.Description = editUserInfo.Description.SanitizeText();
+            user.PhoneNumber = editUserInfo.PhoneNumber.SanitizeText();
             user.GetNewsLetter = editUserInfo.GetNewsLetter;
             user.CountryId = editUserInfo.CountryId;
             user.CityId = editUserInfo.CityId;
@@ -239,6 +239,22 @@ namespace Geram.Application.Services.Implementations
             await _userRepository.Save();
 
             return EditUserInfoResult.Success;
+        }
+
+        public async Task<ChangeUserPasswordResult> ChangeUserPassword(ChangeUserPasswordViewModel changeUserPassword, long userId)
+        {
+            var user = await GetUserById(userId);
+
+            var oldPassword = PasswordHelper.EncodePasswordMd5(changeUserPassword.OldPassword.SanitizeText());
+
+            if (oldPassword != user.Password) return ChangeUserPasswordResult.OldPasswordIsNotValid;
+
+            user.Password = PasswordHelper.EncodePasswordMd5(changeUserPassword.Password.SanitizeText());
+
+            await _userRepository.UpdateUser(user);
+            await _userRepository.Save();
+
+            return ChangeUserPasswordResult.Success;
         }
 
         #endregion

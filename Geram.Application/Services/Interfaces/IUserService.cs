@@ -48,6 +48,8 @@ namespace Geram.Application.Services.Interfaces
 
         Task<EditUserInfoResult> EditUserInfo(EditUserViewModel editUserInfo, long userId);
 
+        Task<ChangeUserPasswordResult> ChangeUserPassword(ChangeUserPasswordViewModel changeUserPassword, long userId);
+
         #endregion
     }
 }

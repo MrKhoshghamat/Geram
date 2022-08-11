@@ -1,6 +1,7 @@
 ﻿using Geram.Application.Extensions;
 using Geram.Application.Services.Interfaces;
 using Geram.Domain.ViewModels.UserPanel.Account;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Geram.Web.Areas.UserPanel.Controllers
@@ -72,6 +73,37 @@ namespace Geram.Web.Areas.UserPanel.Controllers
             return new JsonResult(result);
         }
 
+        #endregion
+
+        #region Change User Password
+
+        [HttpGet]
+        public async Task<IActionResult> ChangeUserPassword()
+        {
+            return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeUserPassword(ChangeUserPasswordViewModel changeUserPassword)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _userService.ChangeUserPassword(changeUserPassword, HttpContext.User.GetUserId());
+
+                switch (result)
+                {
+                    case ChangeUserPasswordResult.OldPasswordIsNotValid:
+                        ModelState.AddModelError("OldPassword", "کلمه عبور وارد شده اشتباه هست.");
+                        break;
+                    case ChangeUserPasswordResult.Success:
+                        TempData[SuccessMessage] = "عملیات با موفقیت انجام شد.";
+                        await HttpContext.SignOutAsync();
+                        return RedirectToAction("Login", "Account", new { area = ""});
+                }
+            }
+
+            return View(changeUserPassword);
+        }
         #endregion
     }
 }
