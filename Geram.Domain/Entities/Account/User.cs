@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Geram.Domain.Entities.Common;
+using Geram.Domain.Entities.Location;
 
 namespace Geram.Domain.Entities.Account
 {
@@ -32,6 +34,12 @@ namespace Geram.Domain.Entities.Account
 
         [Display(Name = "توضیحات")]
         public string? Description { get; set; }
+
+        [Display(Name = "تاریخ تولد")]
+        public DateTime? BirthDate { get; set; }
+        public long? CountryId { get; set; }
+        public long? CityId { get; set; }
+        public bool GetNewsLetter { get; set; }
         public bool IsEmailConfirmed { get; set; }
         public bool IsAdmin { get; set; }
         public bool IsBanned { get; set; }
@@ -42,7 +50,11 @@ namespace Geram.Domain.Entities.Account
 
         #region Relations
 
-        
+        [InverseProperty("UserCountries")]
+        public State? Country { get; set; }
+
+        [InverseProperty("UserCities")]
+        public State? City { get; set; }
 
         #endregion
     }

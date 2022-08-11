@@ -1,4 +1,5 @@
 ﻿using Geram.Domain.Entities.Account;
+using Geram.Domain.Entities.Location;
 using Geram.Domain.Entities.SiteSetting;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,7 @@ namespace Geram.Data.Context
 
         public DbSet<User> Users { get; set; }
         public DbSet<EmailSetting> EmailSettings { get; set; }
+        public DbSet<State> States { get; set; }
 
         #endregion
 
