@@ -66,10 +66,10 @@ $("#CountryId").on("change", function () {
             data: {
                 countryId: countryId
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 StartLoading();
             },
-            success: function(response) {
+            success: function (response) {
                 EndLoading();
                 $("#CityId option:not(:first)").remove();
                 $("#CityId").prop("disabled", false);
@@ -92,3 +92,22 @@ $("#CountryId").on("change", function () {
         $("#CityId").prop("disabled", true);
     }
 });
+
+var datepickers = document.querySelectorAll(".datepicker");
+if (datepickers.length) {
+    for (var datepicker of datepickers) {
+        var id = $(datepicker).attr("id");
+        kamaDatepicker(id, {
+            placeholder: 'مثال : 1400/01/01',
+            twodigit: true,
+            closeAfterSelect: false,
+            forceFarsiDigits: true,
+            markToday: true,
+            markHolidays: true,
+            highlightSelectedDay: true,
+            sync: true,
+            gotoToday: true
+        });
+    }
+    
+}
